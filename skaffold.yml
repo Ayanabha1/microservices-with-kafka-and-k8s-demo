@@ -1,0 +1,29 @@
+apiVersion: skaffold/v2beta26
+kind: Config
+metadata:
+  name: yaara
+build:
+  local:
+    push: false
+  artifacts:
+  - image: ayanabha1/yaara-user
+    context: user
+    docker:
+      dockerfile: Dockerfile
+    sync:
+      manual:
+      - src: '**/*.ts'
+        dest: '.'
+
+  - image: ayanabha1/yaara-creator
+    context: creator
+    docker:
+      dockerfile: Dockerfile
+    sync:
+      manual:
+      - src: '**/*.ts'
+        dest: '.'
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*

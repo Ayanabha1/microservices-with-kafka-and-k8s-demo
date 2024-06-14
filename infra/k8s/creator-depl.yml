@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: creator-depl
+  namespace: kafka
+  labels:
+    app: creator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: creator
+  template:
+    metadata:
+      labels:
+        app: creator
+    spec:
+      containers:
+        - name: creator
+          image: ayanabha1/yaara-creator:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8000
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: creator-svc
+  namespace: kafka
+spec:
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+      nodePort: 30002
+  type: NodePort
+  selector:
+    app: creator
+
